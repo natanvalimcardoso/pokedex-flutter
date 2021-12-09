@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 class Pokemon {
   final String name;
   final String image;
@@ -11,7 +12,11 @@ class Pokemon {
       image: json['img'],
       id: json['id'],
       num: json['num'],
-      type: (json['type'] as List<String>).map((e) => e).toList(),
+      type: (json['type'] as List<dynamic>)
+          .map(
+            (e) => e as String,
+          )
+          .toList(),
     ); // aqui olho novamente no site da api como é para puxar os nomes
   }
 
