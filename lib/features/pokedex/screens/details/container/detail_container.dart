@@ -2,31 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:pokedex_flutter/common/error/failure.dart';
 import 'package:pokedex_flutter/common/models/pokemon.dart';
 import 'package:pokedex_flutter/common/repositories/pokemon_repository.dart';
-import 'package:pokedex_flutter/features/pokedex/screens/details/container/detail_container.dart';
+import 'package:pokedex_flutter/common/widget/po_error.dart';
+import 'package:pokedex_flutter/common/widget/po_loading.dart';
 import 'package:pokedex_flutter/features/pokedex/screens/details/pages/detail_page.dart';
 
-import 'package:pokedex_flutter/features/pokedex/screens/home/pages/home_error.dart';
-import 'package:pokedex_flutter/features/pokedex/screens/home/pages/home_loading.dart';
-import 'package:pokedex_flutter/features/pokedex/screens/home/pages/home_page.dart';
+class DetailsArguments{
+  final String name;
+  DetailsArguments({required this.name});
+}
 
-class HomeContainer extends StatelessWidget {
-  const HomeContainer({Key? key, required this.repository, required this.onItemTap}) : super(key: key);
+class DetailContainer extends StatelessWidget {
+  const DetailContainer({Key? key, required this.repository, required this.arguments}) : super(key: key);
   final IPokemonRepository repository;
-  final Function(String, DetailsArguments)  onItemTap;
+  final DetailsArguments arguments;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Pokemon>>(builder: (context, snapshot) {
       future: repository.getAllPokemons();
       if (snapshot.connectionState == ConnectionState.waiting) {
-        // ignore: prefer_const_constructors
-        return HomeLoading();
+        return PoLoading();
       }
       if (snapshot.connectionState == ConnectionState.done &&
           snapshot.hasData) {
-        return HomePage(list: snapshot.data!, onItemTap: onItemTap,);
+        return DetailPage(name: arguments.name, list: snapshot.data! );
       }
       if (snapshot.hasError) {
-        return HomeError(
+        return PoError(
           error: (snapshot.error as Failure).message!,
         );
       }
