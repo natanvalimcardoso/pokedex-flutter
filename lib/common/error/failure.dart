@@ -1,3 +1,5 @@
-class Failure implements Exception{
- final
+class Failure implements Exception {
+  final String? message;
+
+  Failure({this.message});
 }
